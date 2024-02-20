@@ -1,4 +1,4 @@
-name: Lint and Test PR
+name: pr
 
 on:
   pull_request:
@@ -12,6 +12,45 @@ env:
   NX_BASE: origin/${{github.base_ref}}
 
 jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: setup repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: setup pnpm
+        uses: pnpm/action-setup@v3
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
+          cache: "pnpm"
+
+      - name: log params
+        run: |
+          echo NX_BASE = $NX_BASE
+          echo node version = $(node --version)
+          echo pnpm version = $(pnpm --version)
+
+      - name: install
+        run: pnpm i
+
+      - name: build
+        run: pnpm build
+
+      - name: lint check
+        run: pnpm lint:check
+
+      - name: format check
+        run: pnpm format:check
+
+      - name: test
+        run: pnpm test
+
   dump_contexts_to_log:
     runs-on: ubuntu-latest
     steps:
@@ -39,45 +78,4 @@ jobs:
         env:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: echo "$MATRIX_CONTEXT"
-  lint-test:
-    runs-on: ubuntu-latest
 
-    steps:
-      # TODO: Check for optimally cloning git repo in CI
-      - name: setup repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: setup pnpm
-        uses: pnpm/action-setup@v3
-
-      - name: setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: "package.json"
-          cache: "pnpm"
-
-      - name: log Params
-        run: |
-          echo NX_BASE = $NX_BASE
-          echo NX_HEAD = $NX_HEAD
-          echo node version = $(node --version)
-          echo pnpm version = $(pnpm --version)
-          echo Branches
-          git branch
-
-      - name: install
-        run: pnpm i
-
-      - name: build
-        run: pnpm build
-
-      - name: lint check
-        run: pnpm lint:check
-
-      - name: format check
-        run: pnpm format:check
-
-      - name: test
-        run: pnpm test

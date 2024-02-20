@@ -3,8 +3,8 @@ name: Lint and Test PR
 on: pull_request
 
 env:
-  NX_BASE: github.base_ref
-  NX_HEAD: github.head_ref
+  NX_BASE: ${{github.base_ref}}
+  NX_HEAD: ${{github.head_ref}}
 
 jobs:
   lint-test:
@@ -17,7 +17,7 @@ jobs:
       - name: Setup
         uses: actions/setup-node@v4
         with:
-          node-version-file: 'package.json'
+          node-version-file: "package.json"
 
       - name: Log Params
         run: |
@@ -28,7 +28,6 @@ jobs:
 
       - name: Install
         run: pnpm i
-
 
       - name: Build
         run: pnpm build

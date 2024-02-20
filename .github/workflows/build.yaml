@@ -13,6 +13,7 @@ on:
       - main
       - dev
       - release/*
+  workflow_dispatch:
 
 jobs:
   build:

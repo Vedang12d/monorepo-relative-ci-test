@@ -9,7 +9,7 @@ on:
       - ready_for_review
 
 env:
-  NX_BASE: origin/${{github.base_ref}}
+  NX_BASE: ${{github.base_ref}}
   NX_HEAD: ${{github.head_ref}}
 
 jobs:
@@ -65,6 +65,8 @@ jobs:
           echo NX_HEAD = $NX_HEAD
           echo node version = $(node --version)
           echo pnpm version = $(pnpm --version)
+          echo Branches
+          git branch
 
       - name: install
         run: pnpm i

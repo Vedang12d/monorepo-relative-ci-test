@@ -14,13 +14,21 @@ jobs:
       # TODO: Check for optimally cloning git repo in CI
       - uses: actions/checkout@v4
 
-      - name: Install
-        run: pnpm i
+      - name: Setup
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
 
-      - name: Log Branch Names
+      - name: Log Params
         run: |
           echo NX_BASE = $NX_BASE
           echo NX_HEAD = $NX_HEAD
+          echo node version = $(node --version)
+          echo pnpm version = $(pnpm --version)
+
+      - name: Install
+        run: pnpm i
+
 
       - name: Build
         run: pnpm build

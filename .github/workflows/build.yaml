@@ -1,0 +1,53 @@
+name: build
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - release/*
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+      - dev
+      - release/*
+
+jobs:
+  build:
+    if: ${{ github.event_name === 'push' || github.event.pull_request.merged }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: setup repo
+        uses: actions/checkout@v4
+
+      - name: setup pnpm
+        uses: pnpm/action-setup@v3
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
+          cache: "pnpm"
+
+      - name: log params
+        run: |
+          echo node version = $(node --version)
+          echo pnpm version = $(pnpm --version)
+
+      - name: install
+        run: pnpm i
+
+      - name: build
+        run: pnpm build:all
+
+      - name: lint check
+        run: pnpm lint:check:all
+
+      - name: format check
+        run: pnpm format:check:all
+
+      - name: test
+        run: pnpm test:all

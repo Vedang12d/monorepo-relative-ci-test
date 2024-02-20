@@ -1,0 +1,35 @@
+name: Lint and Test PR
+
+on: pull_request
+
+env:
+  NX_BASE: github.base_ref
+  NX_HEAD: github.head_ref
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # TODO: Check for optimally cloning git repo in CI
+      - uses: actions/checkout@v4
+
+      - name: Install
+        run: pnpm i
+
+      - name: Log Branch Names
+        run: |
+          echo NX_BASE = $NX_BASE
+          echo NX_HEAD = $NX_HEAD
+
+      - name: Build
+        run: pnpm build
+
+      - name: Lint Check
+        run: pnpm lint:check
+
+      - name: Format Check
+        run: pnpm format:check
+
+      - name: Test
+        run: pnpm test

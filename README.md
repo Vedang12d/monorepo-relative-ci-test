@@ -31,3 +31,6 @@ If you want to specify whether the package should be a regular dependency, a dev
   ```
 
 Remember that this command operates within the context of your workspace, so it will affect all packages that share dependencies. Happy coding! 🚀
+
+> [!TODO]
+> Fix Naming confusion of clear:all and clear script across all packages
